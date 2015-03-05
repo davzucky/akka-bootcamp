@@ -13,12 +13,6 @@ namespace WinTail
 	{
 		public const string StartCommand = "start";
 		public const string ExitCommand = "exit";
-		private readonly ActorRef _validationActor;
-
-		public ConsoleReaderActor(ActorRef validationActor)
-		{
-			_validationActor = validationActor;
-		}
 
 		protected override void OnReceive(object message)
 		{
@@ -52,8 +46,8 @@ namespace WinTail
 				return;
 			}
 
-			// otherwise, just hand message off to validation actor (by telling its actor ref)
-			_validationActor.Tell(message);
+			// otherwise, just send the message off for validation
+			Context.ActorSelection("/user/validationActor").Tell(message);
 		}
 		#endregion
 	}

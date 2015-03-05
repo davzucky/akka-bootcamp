@@ -3,16 +3,16 @@ using System;
 
 namespace WinTail
 {
-    #region Program
-    class Program
-    {
-        public static ActorSystem MyActorSystem;
+	#region Program
+	class Program
+	{
+		public static ActorSystem MyActorSystem;
 
-        static void Main(string[] args)
-        {
-            // initialize MyActorSystem
-            // YOU NEED TO FILL IN HERE
-            MyActorSystem = ActorSystem.Create("MyActorSystem");
+		static void Main(string[] args)
+		{
+			// initialize MyActorSystem
+			// YOU NEED TO FILL IN HERE
+			MyActorSystem = ActorSystem.Create("MyActorSystem");
 
 			// time to make your first actors!
 			//YOU NEED TO FILL IN HERE
@@ -24,18 +24,18 @@ namespace WinTail
 			Props tailCoordinatorProps = Props.Create(() => new TailCoordinatorActor());
 			ActorRef tailCoordinatorActor = MyActorSystem.ActorOf(tailCoordinatorProps, "tailCoordinatorActor");
 
-			var validationActorProps = Props.Create(() => new FileValidatorActor (consoleWriterActor, tailCoordinatorActor));
-			var validationActor = MyActorSystem.ActorOf(validationActorProps, "validationActor");
+			Props fileValidatorActorProps = Props.Create(() => new FileValidatorActor(consoleWriterActor));
+            var validationActor = MyActorSystem.ActorOf(fileValidatorActorProps, "validationActor");
 
-			var consoleReaderProps = Props.Create<ConsoleReaderActor>(validationActor);
+			var consoleReaderProps = Props.Create<ConsoleReaderActor>();
 			var consoleReaderActor = MyActorSystem.ActorOf(consoleReaderProps, "consoleReaderProps");
 
-            // tell console reader to begin
-            //YOU NEED TO FILL IN HERE
-            consoleReaderActor.Tell(ConsoleReaderActor.StartCommand);
-            // blocks the main thread from exiting until the actor system is shut down
-            MyActorSystem.AwaitTermination();
-        }
-    }
-    #endregion
+			// tell console reader to begin
+			//YOU NEED TO FILL IN HERE
+			consoleReaderActor.Tell(ConsoleReaderActor.StartCommand);
+			// blocks the main thread from exiting until the actor system is shut down
+			MyActorSystem.AwaitTermination();
+		}
+	}
+	#endregion
 }
